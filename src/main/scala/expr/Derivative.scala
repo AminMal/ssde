@@ -45,7 +45,7 @@ object Derivative {
         Pow(divisor, Const(2))
       )
     case Expr.Sin(arg) => Cos(arg)
-    case Expr.Cos(arg) => throw new RuntimeException("implement this when Neg is there in Expr")
+    case Expr.Cos(arg) => Expr.Neg(Expr.Sin(arg))
     case Expr.Tan(arg) => throw new RuntimeException("implement this when Sec and Csc are there in Expr")
     case Expr.Cot(arg) => throw new RuntimeException("implement this when Sec and Csc are there in Expr")
     case Expr.Func(name, arg) => throw new RuntimeException("Function support is not here yet")

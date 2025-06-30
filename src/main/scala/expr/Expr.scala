@@ -11,6 +11,7 @@ enum Expr {
   case Mul(lhs: Expr, rhs: Expr)
   case Pow(base: Expr, exponent: Expr)
   case Div(dividend: Expr, divisor: Expr)
+  case Neg(e: Expr)
   case Sin(arg: Expr)
   case Cos(arg: Expr)
   case Tan(arg: Expr)
@@ -28,6 +29,7 @@ enum Expr {
     case Expr.Mul(lhs, rhs) => s"(${lhs.show} * ${rhs.show})"
     case Expr.Pow(base, exponent) => s"${base.show}^${exponent.show}"
     case Expr.Div(dividend, divisor) => s"${dividend.show}/${divisor.show}"
+    case Expr.Neg(x) => s"-(${x.show})"
     case Expr.Sin(arg) => s"sin(${arg.show})"
     case Expr.Cos(arg) => s"cos(${arg.show})"
     case Expr.Tan(arg) => s"tan(${arg.show})"
@@ -36,7 +38,8 @@ enum Expr {
   }
   
   def isEffectivelyConstant: Boolean = this match {
-    case Const(_) | `e` => true
+    case Expr.Const(_) | `e` => true
+    case Expr.Neg(x) => x.isEffectivelyConstant
     case Expr.Sin(x) => x.isEffectivelyConstant
     case Expr.Cos(x) => x.isEffectivelyConstant
     case Expr.Tan(x) => x.isEffectivelyConstant
@@ -60,6 +63,7 @@ enum Expr {
       case Expr.Mul(lhs, rhs) => lhs.solveFor(args*) * rhs.solveFor(args*)
       case Expr.Pow(base, exponent) => Math.pow(base.solveFor(args*), exponent.solveFor(args*))
       case Expr.Div(dividend, divisor) => dividend.solveFor(args*) / divisor.solveFor(args*)
+      case Expr.Neg(e) => - e.solveFor(args*)
       case Expr.Sin(arg) => Math.sin(arg.solveFor(args*))
       case Expr.Cos(arg) => Math.cos(arg.solveFor(args*))
       case Expr.Tan(arg) => Math.tan(arg.solveFor(args*))

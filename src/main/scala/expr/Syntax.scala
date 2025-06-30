@@ -35,5 +35,7 @@ object Syntax {
     
     def derivativeOver(variable: Expr.Var): Expr =
       Derivative.derivativeOf(dis, variable)
+      
+    def neg: Expr = Expr.Neg(dis)
   }
 }

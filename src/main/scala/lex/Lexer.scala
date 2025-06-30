@@ -6,6 +6,11 @@ import SubExpr.*
 import scala.annotation.tailrec
 
 class Lexer {
+  
+  private object Letter {
+    def unapply(token: Char): Option[Char] = if token.isLetter then Some(token) else None
+  }
+  
   @tailrec
   private def tokenizeInternal(in: List[Char], acc: List[SubExpr]): List[SubExpr] = in match {
     case Nil => acc.reverse
@@ -24,11 +29,12 @@ class Lexer {
         case _ => rest
       }
       tokenizeInternal(restRefined, s :: acc)
-    // Var
-    case x :: next :: rest if x.isLetter && !next.isLetter =>
-      tokenizeInternal(next :: rest, S(Expr.Var(x.toString)) :: acc)
-    case x :: Nil if x.isLetter =>
-      tokenizeInternal(Nil, S(Expr.Var(x.toString)) :: acc)
+    // Vars and e 
+    case Letter(x) :: rest if !rest.headOption.exists(_.isLetter) && !rest.headOption.contains('(') =>
+      x match {
+        case 'e' => tokenizeInternal(rest, S(Expr.e) :: acc)
+        case _   => tokenizeInternal(rest, S(Expr.Var(x.toString)) :: acc)
+      }
     // Function symbol
     case a :: _ if a.isLetter =>
       val (letters, rest) = in.span(_.isLetter)

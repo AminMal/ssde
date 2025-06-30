@@ -7,6 +7,9 @@ object Simplifier {
     case Const(_)                                                           => ex
     case Var(_)                                                             => ex
     case `e`                                                                => ex
+    case Neg(Const(0))                                                      => Const(0)
+    case Add(lhs, Neg(rhs))                                                 => Sub(lhs, rhs)
+    case Add(Neg(lhs), rhs)                                                 => Sub(rhs, lhs)
     case Add(lhs, rhs)                                                      =>
       val simplifiedLhs = simplify(lhs)
       val simplifiedRhs = simplify(rhs)

@@ -139,6 +139,15 @@ object DefaultParser extends Parser {
     }
   }
 
+  private object HasNeg {
+    @tailrec
+    private def indexWhereSIsNegated(tokens: List[SubExpr], currIndex: Int = 0): Option[Int] = tokens match {
+      case list if list.sizeIs < 2 => None
+      case SubExpr.S(_) :: SubExpr.`-` :: SubExpr.S(_) :: _ => Some(currIndex)
+      case _ :: tail => indexWhereSIsNegated(tail, currIndex + 1)
+    }
+  }
+
   override def parse(tokens: List[SubExpr]): Result[Expr] = {
     tokens match {
       case SubExpr.S(exp) :: Nil => Right(exp)
