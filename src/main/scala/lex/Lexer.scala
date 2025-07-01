@@ -20,6 +20,7 @@ class Lexer {
     case '-' :: rest => tokenizeInternal(rest, `-` :: acc)
     case '(' :: rest => tokenizeInternal(rest, `(` :: acc)
     case ')' :: rest => tokenizeInternal(rest, `)` :: acc)
+    case '/' :: rest => tokenizeInternal(rest, `/` :: acc)
     // Numbers
     case c :: _ if c.isDigit =>
       val (digits, rest) = in.span(_.isDigit)
