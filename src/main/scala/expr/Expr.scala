@@ -12,10 +12,6 @@ enum Expr {
   case Pow(base: Expr, exponent: Expr)
   case Div(dividend: Expr, divisor: Expr)
   case Neg(e: Expr)
-  case Sin(arg: Expr)
-  case Cos(arg: Expr)
-  case Tan(arg: Expr)
-  case Cot(arg: Expr)
   case Func(name: String, arg: Expr)
 
   def show: String = this match {
@@ -30,20 +26,13 @@ enum Expr {
     case Expr.Pow(base, exponent) => s"${base.show}^${exponent.show}"
     case Expr.Div(dividend, divisor) => s"${dividend.show}/${divisor.show}"
     case Expr.Neg(x) => s"-(${x.show})"
-    case Expr.Sin(arg) => s"sin(${arg.show})"
-    case Expr.Cos(arg) => s"cos(${arg.show})"
-    case Expr.Tan(arg) => s"tan(${arg.show})"
-    case Expr.Cot(arg) => s"cot(${arg.show})"
     case Expr.Func(name, arg) => s"$name(${arg.show})"
   }
   
   def isEffectivelyConstant: Boolean = this match {
     case Expr.Const(_) | `e` => true
     case Expr.Neg(x) => x.isEffectivelyConstant
-    case Expr.Sin(x) => x.isEffectivelyConstant
-    case Expr.Cos(x) => x.isEffectivelyConstant
-    case Expr.Tan(x) => x.isEffectivelyConstant
-    case Expr.Cot(x) => x.isEffectivelyConstant
+    case Expr.Func("sin" | "cos" | "tan" | "cot", arg) => arg.isEffectivelyConstant
     case Expr.Add(x, y) => x.isEffectivelyConstant && y.isEffectivelyConstant
     case Expr.Sub(x, y) => x.isEffectivelyConstant && y.isEffectivelyConstant
     case Expr.Mul(x, y) => x.isEffectivelyConstant && y.isEffectivelyConstant
@@ -64,11 +53,13 @@ enum Expr {
       case Expr.Pow(base, exponent) => Math.pow(base.solveFor(args*), exponent.solveFor(args*))
       case Expr.Div(dividend, divisor) => dividend.solveFor(args*) / divisor.solveFor(args*)
       case Expr.Neg(e) => - e.solveFor(args*)
-      case Expr.Sin(arg) => Math.sin(arg.solveFor(args*))
-      case Expr.Cos(arg) => Math.cos(arg.solveFor(args*))
-      case Expr.Tan(arg) => Math.tan(arg.solveFor(args*))
-      case Expr.Cot(arg) => 1d / Math.tan(arg.solveFor(args*))
-      case Expr.Func(name, arg) => ???
+      case Expr.Func(name, arg) => name match {
+        case "sin" => Math.sin(arg.solveFor(args*))
+        case "cos" => Math.cos(arg.solveFor(args*))
+        case "tan" => Math.tan(arg.solveFor(args*))
+        case "cot" => 1d / Math.tan(arg.solveFor(args*))
+        case _ => ???
+      }
     }
   }
 }
@@ -76,13 +67,5 @@ enum Expr {
 object Expr {
   object EffectivelyConstant {
     def unapply(e: Expr): Option[Expr] = if e.isEffectivelyConstant then Some(e) else None
-  }
-  
-  def func(name: String, arg: Expr): Expr = name.toLowerCase match {
-    case "sin" => Expr.Sin(arg)
-    case "cos" => Expr.Cos(arg)
-    case "tan" => Expr.Tan(arg)
-    case "cot" => Expr.Cot(arg)
-    case _     => Expr.Func(name, arg)
   }
 }

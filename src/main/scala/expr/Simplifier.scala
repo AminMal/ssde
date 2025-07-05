@@ -8,6 +8,7 @@ object Simplifier {
     case Var(_)                                                             => ex
     case `e`                                                                => ex
     case Neg(Const(0))                                                      => Const(0)
+    case Neg(Neg(inner))                                                    => inner
     case Add(lhs, Neg(rhs))                                                 => Sub(lhs, rhs)
     case Add(Neg(lhs), rhs)                                                 => Sub(rhs, lhs)
     case Add(lhs, rhs)                                                      =>
@@ -37,8 +38,7 @@ object Simplifier {
       if simplifiedDivisor == Const(1) then simplifiedDividend
       else if simplifiedDividend == simplifiedDivisor then Const(1)
       else Div(simplifiedDividend, simplifiedDivisor)
-    case Sin(x)                                                             => Sin(simplify(x))
-    case Cos(x)                                                             => Cos(simplify(x))
+    case Func(name, arg)                                                    => Func(name, simplify(arg))
     case other                                                              => other
   }
 }

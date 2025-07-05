@@ -1,8 +1,10 @@
-import expr.{Expr, Simplifier}
+import expr.Expr
 import lex.Lexer
 import parser.DefaultParser
 import expr.Syntax.{*, given}
-import out.LatexOutput
+
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 object Main extends App {
 
@@ -15,12 +17,12 @@ object Main extends App {
     }
   }
 
-  parse("2^30(x)^2 / 3^4sin(x) + 2a") { expression =>
-    println(s"expression is ${expression.simplified.show}")
-//    val derivative = expression.derivativeOver(x)
-//    println(s"derivative is ${derivative.show}")
-//    println(s"derivative is ${Simplifier.simplify(derivative).show}")
-//    println(s"derivative at point x = 1 is ${derivative.solveFor("x" -> 1)}")
-    println(LatexOutput.output(expression.simplified))
+  val start = LocalDateTime.now()
+
+  parse("2^30(x)^2 / 3^4sin(x) + 2x") { expression =>
+    println(s"value at point x = 1 is ${expression.solveFor("x" -> 1)}")
   }
+  val end = LocalDateTime.now()
+  val dur = ChronoUnit.MICROS.between(start, end)
+  println(s"It took ${dur}µs to complete")
 }

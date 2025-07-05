@@ -148,11 +148,12 @@ object DefaultParser extends Parser {
     }
   }
 
+  @tailrec
   override def parse(tokens: List[SubExpr]): Result[Expr] = {
     tokens match {
       case SubExpr.S(exp) :: Nil => Right(exp)
       case ContainsFunction(beginning, funcName, arg, rest) =>
-        parse(beginning ::: (SubExpr.S(Expr.func(funcName, arg)) :: rest))
+        parse(beginning ::: (SubExpr.S(Expr.Func(funcName, arg)) :: rest))
       case `Has ( S )`(beginning, s, rest) =>
         parse(beginning ::: (s :: rest))
       case HasExponentiation(beginning, base, exponent, rest) =>

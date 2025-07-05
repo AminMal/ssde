@@ -6,10 +6,10 @@ object Syntax {
   given numToConst: Conversion[Int, Expr] = Expr.Const(_)
   
   def variable(name: String): Expr.Var = Expr.Var(name)
-  def sin(expr: Expr): Expr = Expr.Sin(expr)
-  def cos(expr: Expr): Expr = Expr.Cos(expr)
-  def tan(expr: Expr): Expr = Expr.Tan(expr)
-  def cot(expr: Expr): Expr = Expr.Cot(expr)
+  def sin(expr: Expr): Expr = Expr.Func("sin", expr)
+  def cos(expr: Expr): Expr = Expr.Func("cos", expr)
+  def tan(expr: Expr): Expr = Expr.Func("tan", expr)
+  def cot(expr: Expr): Expr = Expr.Func("cot", expr)
   
   final val x: Expr.Var = variable("x")
   final val y: Expr.Var = variable("y")
