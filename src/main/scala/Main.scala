@@ -19,9 +19,11 @@ object Main extends App {
 
   val start = LocalDateTime.now()
 
-  parse("2^30(x)^2 / 3^4sin(x) + 2x") { expression =>
-    println(s"value at point x = 1 is ${expression.solveFor("x" -> 1)}")
+  parse("2^10(x)^2 / 3^4x + 2x") { expression =>
+    val der = expression.derivativeOver(x)
+    println(s"value at point x = 1 is ${der.solveFor('x' -> 1)}")
   }
+
   val end = LocalDateTime.now()
   val dur = ChronoUnit.MICROS.between(start, end)
   println(s"It took ${dur}µs to complete")

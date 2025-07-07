@@ -5,14 +5,14 @@ import scala.annotation.targetName
 object Syntax {
   given numToConst: Conversion[Int, Expr] = Expr.Const(_)
   
-  def variable(name: String): Expr.Var = Expr.Var(name)
+  def variable(name: Char): Expr.Var = Expr.Var(name)
   def sin(expr: Expr): Expr = Expr.Func("sin", expr)
   def cos(expr: Expr): Expr = Expr.Func("cos", expr)
   def tan(expr: Expr): Expr = Expr.Func("tan", expr)
   def cot(expr: Expr): Expr = Expr.Func("cot", expr)
   
-  final val x: Expr.Var = variable("x")
-  final val y: Expr.Var = variable("y")
+  final val x: Expr.Var = variable('x')
+  final val y: Expr.Var = variable('y')
   final val e: Expr = Expr.e
   
   extension (dis: Expr) {

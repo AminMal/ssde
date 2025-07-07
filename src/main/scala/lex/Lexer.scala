@@ -34,7 +34,7 @@ class Lexer {
     case Letter(x) :: rest if !rest.headOption.exists(_.isLetter) && !rest.headOption.contains('(') =>
       x match {
         case 'e' => tokenizeInternal(rest, S(Expr.e) :: acc)
-        case _   => tokenizeInternal(rest, S(Expr.Var(x.toString)) :: acc)
+        case _   => tokenizeInternal(rest, S(Expr.Var(x)) :: acc)
       }
     // Function symbol
     case a :: _ if a.isLetter =>

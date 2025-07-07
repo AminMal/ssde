@@ -3,7 +3,7 @@ package expr
 import errors.EvaluationError
 
 enum Expr {
-  case Var(name: String)
+  case Var(name: Char)
   case Const(num: Int)
   case e
   case Add(lhs: Expr, rhs: Expr)
@@ -15,7 +15,7 @@ enum Expr {
   case Func(name: String, arg: Expr)
 
   def show: String = this match {
-    case Expr.Var(name) => name
+    case Expr.Var(name) => name.toString
     case Expr.Const(num) => num.toString
     case Expr.e => "e"
     case Expr.Add(lhs, rhs) => s"(${lhs.show} + ${rhs.show})"
@@ -41,7 +41,7 @@ enum Expr {
     case _ => false
   }
 
-  def solveFor(args: (String, Double)*): Double = {
+  def solveFor(args: (Char, Double)*): Double = {
     val argsRegistry = args.toMap
     this match {
       case Expr.Var(name) => argsRegistry.getOrElse(name, throw EvaluationError.VariableNotFound(name))

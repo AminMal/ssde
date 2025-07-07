@@ -13,13 +13,13 @@ object LatexOutput extends ExpressionOutput[Id, String] {
 
   private object VarComesNext {
     def unapply(e: Expr): Option[Expr] = e match {
-      case Expr.Var(_) | Expr.Pow(_, Expr.Var(_)) | Expr.Pow(Expr.Var(_), _) => Some(e)
+      case Expr.Var(_) | Expr.Pow(Expr.Var(_), _) | Expr.e => Some(e)
       case _                                                                 => None
     }
   }
 
   private def toLatexString(e: Expr): String = e match {
-    case Expr.Var(name) => name
+    case Expr.Var(name) => name.toString
     case Expr.Const(num) => s"{$num}"
     case Expr.e => "e"
     case Expr.Add(lhs, rhs) => s"(${toLatexString(lhs)} + ${toLatexString(rhs)})"
